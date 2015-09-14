@@ -31,11 +31,13 @@ def main ():
     for arg in args:
         process(arg) # process() is defined elsewhere
     
-    # Begin Main code    
-    listOfExcelStrings = getExcelStrings()
-    output = createOutput(listOfExcelStrings);
-    printOutput(output)
-    
+    # Begin Main code 
+    while True:
+		listOfExcelStrings = getExcelStrings()
+		output = createOutput(listOfExcelStrings)
+		printOutput(output)
+		print "PRESS ENTER TO CONTINUE."
+		wait = raw_input()
 
 def getExcelStrings():
     ''' NEEDS DOCUMENTATION
