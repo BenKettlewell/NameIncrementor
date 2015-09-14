@@ -1,4 +1,4 @@
-"""
+﻿"""
 Take input as a long string, for example:
 
 'Systems and Vulns'!D55,'Systems and Vulns'!D56,'Systems and Vulns'!D57,'Systems and Vulns'!D58,'Systems and Vulns'!D59,
@@ -9,13 +9,86 @@ Take input as a long string, for example:
 
 Change the letter after the '!' one further in the alphabet for each item in the comma separated list, and return each one.
 """
+import sys
+import getopt
 
+def main ():
+    ''' EXPLANATION OF PROGRAM
+    '''
+    # parse command line options
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "h", ["help"])
+    except getopt.error, msg:
+        print msg
+        print "for help use --help"
+        sys.exit(2)
+    # process options
+    for o, a in opts:
+        if o in ("-h", "--help"):
+            print __doc__
+            sys.exit(1)
+    # process arguments
+    for arg in args:
+        process(arg) # process() is defined elsewhere
+    
+    # Begin Main code    
+    listOfExcelStrings = getExcelStrings()
+    output = createOutput(listOfExcelStrings);
+    printOutput(output)
+    
 
-input = str(input('Paste comma separated list here:'))
+def getExcelStrings():
+    ''' NEEDS DOCUMENTATION
+    '''
+    prompt = "Please enter 2 Excel strings"
+    print prompt;
+    excelStrings = []
+    #for i in range (1,1):
+    userProvidedExcelString = raw_input();
+    #userProvidedExcelString = "='Systems and Vulns'!B23"
+    excelStrings.append(userProvidedExcelString)
+    return excelStrings
 
-input = "'Systems and Vulns'!D55,'Systems and Vulns'!E56,'Systems and Vulns'!F57,'Systems and Vulns'!G58,'Systems and Vulns'!D59"
+def createOutput(listOfExcelStrings):
+    ''' NEEDS DOCUMENTATION
+    '''
+    output = []
+    output.append(generateNextString(listOfExcelStrings[0]))
+    for i in range (0, 20):
+        output.append(generateNextString(output[i]))
+    return output
 
-#Turn comma separated list stored in 'input' into an array
+def printOutput(output):
+    ''' NEEDS DOCUMENTATION
+    '''
+    for i in range (0, len(output)):
+        print output[i]
+
+def generateNextString(previousExcelString):
+    ''' NEEDS DOCUMENTATION
+    '''
+    nextValue = determineNextValue(previousExcelString)
+    exclamationIndexes = findAllIndexes (previousExcelString, '!')
+    valueIndexes = []
+    for i in range(0,len(exclamationIndexes)):
+        valueIndexes.append (exclamationIndexes[i]+1)
+    newString = list(previousExcelString) # Because Strings are immutable
+    for i in valueIndexes:
+        newString[i] = nextValue
+
+    return "".join(newString) # Put list back together again
+
+def findAllIndexes(s, ch):
+    ''' NEEDS DOCUMENTATION
+    '''
+    return [i for i, ltr in enumerate(s) if ltr == ch]
+
+def determineNextValue (excelString):
+    currentValue = excelString[excelString.index('!') + 1]
+    nextValue = chr(ord(currentValue) + 1)
+    return nextValue
+
+'''
 def makeList(input):
     myList = input.split(",")
     return myList
@@ -32,10 +105,6 @@ def incrementList(myList, newList):
         print (currentString)
         print ("success")
         newList.append(currentString)
-
-myList = makeList(input)
-newList = []
-incrementList(myList, newList)
-
-print (myList)
-print (newList)
+'''
+if __name__ == "__main__":
+    main()
